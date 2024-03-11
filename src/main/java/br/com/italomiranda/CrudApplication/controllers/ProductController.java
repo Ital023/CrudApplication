@@ -34,6 +34,7 @@ public class ProductController {
         return ResponseEntity.ok(requestProduct);
     }
 
+    //Alter Data
     @PutMapping
     @Transactional
     public ResponseEntity updateProduct(@RequestBody @Valid RequestProduct data){
@@ -46,6 +47,12 @@ public class ProductController {
         } else {
             throw new EntityNotFoundException();
         }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteProduct(@PathVariable String id){
+        productRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
