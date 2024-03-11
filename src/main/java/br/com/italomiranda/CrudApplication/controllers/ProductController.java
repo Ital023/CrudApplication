@@ -22,7 +22,7 @@ public class ProductController {
     //Retrieve a list of all data.
     @GetMapping
     public ResponseEntity getAllProducts(){
-        return ResponseEntity.ok(productRepository.findAll());
+        return ResponseEntity.ok(productRepository.findAllByActiveTrue());
     }
 
     //Register a new data.
@@ -50,8 +50,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity deleteProduct(@PathVariable String id){
-        productRepository.deleteById(id);
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.setActive(false);
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
